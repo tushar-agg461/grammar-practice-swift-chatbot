@@ -7,6 +7,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { IntentClassifierService } from './services/intent-classifier/intent-classifier.service';
 
 import * as dotenv from 'dotenv';
+import { UserService } from './database/query';
 dotenv.config();
 
 
@@ -25,6 +26,6 @@ dotenv.config();
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [AppController],
-  providers: [ MessageService, LocalizationService, IntentClassifierService],
+  providers: [ MessageService, LocalizationService, IntentClassifierService,UserService],
 })
 export class AppModule {}

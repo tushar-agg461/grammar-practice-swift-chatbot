@@ -13,15 +13,11 @@ export class UserService {
 
   async createUser(
     mobileNumber: string,
-    tags: string,
-    pageNo: number,
     language: string,
     botID: string,
   ): Promise<User> {
     const user = new User();
     user.mobileNumber = mobileNumber;
-    user.tags = tags;
-    user.pageNo = pageNo;
     user.language = language;
     user.botID = botID;
     

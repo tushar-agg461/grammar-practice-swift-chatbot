@@ -21,7 +21,7 @@ export class AppController {
     let language  = await this.userService.findUserByMobileNumber(from)
       switch (intent) {
         case 'text':
-          await this.message.sendMessage(language,from);
+          await this.message.sendMessage(text, from);
           break;
         case 'article':
           await this.message.sendArticleMessage(from);
