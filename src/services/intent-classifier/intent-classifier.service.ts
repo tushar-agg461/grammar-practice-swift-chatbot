@@ -6,9 +6,6 @@ export class IntentClassifierService {
   constructor(private readonly MessageService: MessageService) {}
 
   async classifyIntent(type: string, body: any) {
-    const { from } = body;
-    const botId = process.env.BOT_ID;
-    const apiKey = process.env.API_KEY;
     if (type === 'text') {
       return 'text';
     } else if (type === 'persistent_menu_response') {

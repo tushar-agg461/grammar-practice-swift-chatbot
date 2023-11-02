@@ -5,7 +5,6 @@ import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
-  
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -16,14 +15,16 @@ export class UserService {
     language: string,
     botID: string,
   ): Promise<User> {
+    
     const user = new User();
     user.mobileNumber = mobileNumber;
     user.language = language;
     user.botID = botID;
-    
     return this.userRepository.save(user);
   }
-  async findUserByMobileNumber(mobileNumber: string): Promise<User | undefined> {
+  async findUserByMobileNumber(
+    mobileNumber: string,
+  ): Promise<User | undefined> {
     return this.userRepository.findOne({ where: { mobileNumber } });
-  }  
+  }
 }
