@@ -8,6 +8,7 @@ import { IntentClassifierService } from './services/intent-classifier/intent-cla
 
 import * as dotenv from 'dotenv';
 import { UserService } from './database/query';
+import { SwiftchatService } from './services/swiftchat/swiftchat.service';
 dotenv.config();
 
 
@@ -26,6 +27,6 @@ dotenv.config();
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [AppController],
-  providers: [ MessageService, LocalizationService, IntentClassifierService,UserService],
+  providers: [ MessageService, LocalizationService, IntentClassifierService,UserService, SwiftchatService],
 })
 export class AppModule {}

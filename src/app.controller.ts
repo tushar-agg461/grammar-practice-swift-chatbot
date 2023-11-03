@@ -17,8 +17,6 @@ export class AppController {
     try {
       const { from, text, type } = body;
       let intent = await this.intentClassifierService.classifyIntent(type,body);
-      console.log(intent);
-    let language  = await this.userService.findUserByMobileNumber(from)
       switch (intent) {
         case 'text':
           await this.message.sendMessage(text, from);
