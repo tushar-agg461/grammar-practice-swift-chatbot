@@ -15,12 +15,14 @@ export class AppController {
   ) {}
   @UseInterceptors(CacheInterceptor) // Automatically cache the response for this endpoint
   @CacheTTL(30)
-  @Get(`/api/users`)
-  async getUsers() {
-    return  "authenticated"
+  @Get(`/api/status`)
+  async getStauas() {
+    return  {
+      staus:"ok"
+    }
   }
 
-  @Post('/webhook')
+  @Post('/message')
   async handelUserMessage(@Body() body): Promise<void> {
     try {
       const { from, text, type } = body;
