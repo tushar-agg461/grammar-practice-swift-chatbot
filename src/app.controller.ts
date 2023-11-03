@@ -3,6 +3,7 @@ import { MessageService } from './services/message/message.service';
 import { IntentClassifierService } from './services/intent-classifier/intent-classifier.service';
 import { UserService } from './database/query';
 import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import { localisedStrings } from './i18n/en/message';
 
 @Controller()
 export class AppController {
@@ -27,9 +28,10 @@ export class AppController {
         type,
         body,
       );
+   let   a = localisedStrings.welcomeMessage
       switch (intent) {
         case 'text':
-          await this.message.sendWelcomeMessage(text, from);
+          await this.message.sendWelcomeMessage(a, from);
           break;
         default:
           break;

@@ -10,13 +10,13 @@ export class SwiftchatService {
   constructor(
     @Inject(CACHE_MANAGER) private cacheService: Cache,
   ) {}
-  
   private botId = process.env.BOT_ID;
   private apiKey = process.env.API_KEY;
   private apiUrl = process.env.API_URL;
   private baseUrl = `${this.apiUrl}/${this.botId}/messages`;
 
   async sendRequestToswiftChat(requestData: any) {
+    console.log(requestData)
     try {
       const cachedData = await this.cacheService.get<{ name: string }>(
         "ok"
