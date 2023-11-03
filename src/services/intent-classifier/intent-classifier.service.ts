@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { MessageService } from '../message/message.service';
 
 @Injectable()
 export class IntentClassifierService {
-  constructor(private readonly MessageService: MessageService) {}
-
   async classifyIntent(type: string, body: any) {
     if (type === 'text') {
       return 'text';
