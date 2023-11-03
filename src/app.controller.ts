@@ -1,7 +1,9 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseInterceptors } from '@nestjs/common';
 import { MessageService } from './services/message/message.service';
 import { IntentClassifierService } from './services/intent-classifier/intent-classifier.service';
 import { UserService } from './database/query';
+import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+
 @Controller()
 export class AppController {
   UserService: any;
@@ -10,6 +12,12 @@ export class AppController {
     private readonly intentClassifierService: IntentClassifierService,
     private readonly userService: UserService,
   ) {}
+  @UseInterceptors(CacheInterceptor) // Automatically cache the response for this endpoint
+  @CacheTTL(30)
+  @Get(`/api/users`)
+  async getUsers() {
+    return  "authenticated"
+  }
 
   @Post('/webhook')
   async handelUserMessage(@Body() body): Promise<void> {
@@ -21,14 +29,8 @@ export class AppController {
       );
       switch (intent) {
         case 'text':
-          await this.message.sendMessage(text, from);
+          await this.message.sendWelcomeMessage(text, from);
           break;
-        case 'article':
-          await this.message.sendArticleMessage(from);
-        case 'button_response':
-          await this.message.sendButtonMessage(from);
-        case 'persistent_menu_response':
-          await this.message.sendButtonMessage(from);
         default:
           break;
       }
