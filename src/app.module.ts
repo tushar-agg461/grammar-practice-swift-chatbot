@@ -1,15 +1,20 @@
+// app.module.ts
+
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from './module/user.entity';
+import { User } from './model/user.entity';
 import { AppController } from './app.controller';
-import { MessageService } from './chat/message.service';
-import { LocalizationService } from './localization/localization.service';
-import { UserService } from './module/query';
-import { SwiftchatService } from './swiftchat/swiftchat.service';
+import { UserService } from './model/query';
 import * as dotenv from 'dotenv';
 import { databaseConfig } from './config/database-config.service';
-import IntentClassifier from './intent-classifier/intent-classifier.service';
-import ChatbotService from './intent-classifier/Chatbot service';
+import { APP_FILTER } from '@nestjs/core';
+import { LoggingService } from './common/middleware/logger.middleware';
+import { MessageModule } from './chat/message.module';
+import { LocalizationModule } from './localization/localization.module';
+import { SwiftchatModule } from './swiftchat/swiftchat.module';
+import { HttpExceptionFilter } from './common/exception/http-exception.filter';
+import { ChatbotModule } from './intent/intent.module';
+
 dotenv.config();
 
 @Module({
@@ -20,15 +25,19 @@ dotenv.config();
       },
     }),
     TypeOrmModule.forFeature([User]),
+    MessageModule,
+    LocalizationModule,
+    SwiftchatModule,
+    ChatbotModule, // Include the ChatbotModule
   ],
   controllers: [AppController],
   providers: [
-    MessageService,
-    LocalizationService,
-    IntentClassifier,
+    LoggingService,
     UserService,
-    SwiftchatService,
-    ChatbotService
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
   ],
 })
 export class AppModule {}

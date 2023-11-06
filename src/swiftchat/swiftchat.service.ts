@@ -1,8 +1,9 @@
-import {  Injectable } from '@nestjs/common';
+import {  Injectable ,NotFoundException} from '@nestjs/common';
 import axios from 'axios';
 
 
 import * as dotenv from 'dotenv';
+import { CustomException } from 'src/common/exception/custom.exception';
 dotenv.config();
 @Injectable()
 export class SwiftchatService {
@@ -13,9 +14,7 @@ export class SwiftchatService {
   private baseUrl = `${this.apiUrl}/${this.botId}/messages`;
 
   async sendRequestToswiftChat(requestData: any) {
-    console.log(requestData)
     try {
-
       const response = await axios.post(this.baseUrl, requestData, {
         headers: {
           Authorization: `Bearer ${this.apiKey}`,
@@ -24,7 +23,8 @@ export class SwiftchatService {
       });
       return response.data;
     } catch (error) {
-      throw error;
+       throw new CustomException(error);
     }
   }
 }
+

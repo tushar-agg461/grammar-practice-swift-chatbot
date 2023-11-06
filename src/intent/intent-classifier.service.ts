@@ -1,4 +1,5 @@
 import * as natural from 'natural';
+
 class IntentClassifier {
   private classifier: natural.BayesClassifier;
   constructor() {

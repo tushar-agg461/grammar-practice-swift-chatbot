@@ -1,35 +1,38 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
-import { UserService } from './module/query';
 import { localisedStrings } from './i18n/en/message';
 import { MessageService } from './chat/message.service';
-import IntentClassifier from './intent-classifier/intent-classifier.service';
-import ChatbotService from './intent-classifier/Chatbot service';
+import IntentClassifier from './intent/intent-classifier.service';
+import ChatbotService from './intent/Chatbot service';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { LoggingService } from './common/middleware/logger.middleware';
+import { log } from './common/middleware/logger.help';
+
 
 @Controller()
 export class AppController {
+  UserService: any;
   constructor(
     private readonly message: MessageService,
     private readonly intentClassifierService: IntentClassifier,
     private readonly chatbotService: ChatbotService,
-    private readonly userService: UserService,
+    private readonly logginService: LoggingService
   ) {}
 
-  @Get('/api/status')
-  async getStatus() {
+  @Get(`/api/status`)
+  async getStauas() {
     return {
-      status: 'ok',
+      staus: 'ok',
     };
   }
 
   @Post('/message')
-  async handleUserMessage(@Body() body, @Res() res): Promise<void> {
+
+  async handelUserMessage(@Body() body): Promise<void> {
     try {
       const { from, text, type } = body;
-      this.chatbotService.processMessage(text, from); // Corrected arguments
-      res.send('ok');
+      let id = this.chatbotService.processMessage(text.body,body.from);
+      log(body.from,body.text,)
     } catch (error) {
       console.error(error);
-      res.status(500).send('Internal Server Error');
     }
   }
 }
