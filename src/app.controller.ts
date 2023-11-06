@@ -1,9 +1,8 @@
-import { Body, Controller, Get, Post, UseInterceptors } from '@nestjs/common';
-import { MessageService } from './services/message/message.service';
-import { IntentClassifierService } from './services/intent-classifier/intent-classifier.service';
-import { UserService } from './database/query';
-import { CacheInterceptor, CacheTTL } from '@nestjs/cache-manager';
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { IntentClassifierService } from './intent-classifier/intent-classifier.service';
+import { UserService } from './module/query';
 import { localisedStrings } from './i18n/en/message';
+import { MessageService } from './chat/message.service';
 
 @Controller()
 export class AppController {
@@ -13,8 +12,7 @@ export class AppController {
     private readonly intentClassifierService: IntentClassifierService,
     private readonly userService: UserService,
   ) {}
-  @UseInterceptors(CacheInterceptor) // Automatically cache the response for this endpoint
-  @CacheTTL(30)
+ 
   @Get(`/api/status`)
   async getStauas() {
     return  {

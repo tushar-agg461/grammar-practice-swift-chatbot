@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SwiftchatService } from '../swiftchat/swiftchat.service';
-
+import { SwiftchatService } from 'src/swiftchat/swiftchat.service';
 @Injectable()
 export class MessageService {
   constructor(private readonly swiftChat: SwiftchatService) {}
