@@ -12,7 +12,7 @@ export class AppController {
     private readonly message: MessageService,
     private readonly intentClassifierService: IntentClassifier,
     private readonly chatbotService: ChatbotService,
-    private readonly userService: UserService
+    private readonly userService: UserService,
   ) {}
 
   @Get(`/api/status`)
@@ -22,33 +22,13 @@ export class AppController {
     };
   }
 
-
   @Post('/message')
   async handelUserMessage(@Body() body): Promise<void> {
     try {
       const { from, text, type } = body;
-      console.log(from);
-      let id = this.chatbotService.processMessage(text.body)
-      await this.message.sendWelcomeMessage(id, from);
+      let id = this.chatbotService.processMessage(text.body,body.from);
     } catch (error) {
-
+      console.error(error);
     }
-    //   try {
-    //     const { from, text, type } = body;
-    //     let intent = await this.intentClassifierService.classifyIntent(
-    //       type,
-    //       body,
-    //     );
-    //  let   a = localisedStrings.welcomeMessage
-    //     switch (intent) {
-    //       case 'text':
-    //         await this.message.sendWelcomeMessage(a, from);
-    //         break;
-    //       default:
-    //         break;
-    //     }
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
   }
 }

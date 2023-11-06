@@ -1,19 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { SwiftchatService } from 'src/swiftchat/swiftchat.service';
+import { localisedStrings } from 'src/i18n/en/message';
+
 @Injectable()
 export class MessageService {
-  constructor(private readonly swiftChat: SwiftchatService) {}
+  constructor(
+    private readonly swiftChat: SwiftchatService,
+  ) {}
 
-  async sendWelcomeMessage(localisedStrings: string, to: string) {
-    console.log(localisedStrings)
+  async sendWelcomeMessage(from: string) {
+    let wellcomeMessage = await localisedStrings.welcomeMessage; 
     const requestData = {
-      to: to,
+      to: from,
       type: 'text',
       text: {
-        body: localisedStrings,
+        body: wellcomeMessage, 
       },
     };
-    console.log(requestData)
     return this.swiftChat.sendRequestToswiftChat(requestData);
   }
 }

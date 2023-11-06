@@ -1,21 +1,26 @@
-import IntentClassifier from "./intent-classifier.service";
+import IntentClassifier from './intent-classifier.service';
+import { MessageService } from 'src/chat/message.service';
 
-class ChatbotService {
-  private intentClassifier: IntentClassifier;
-  constructor() {
-    this.intentClassifier = new IntentClassifier();
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class ChatbotService {
+  private readonly intentClassifier: IntentClassifier;
+  private readonly message: MessageService;
+
+  constructor(intentClassifier: IntentClassifier, message: MessageService) {
+    this.intentClassifier = intentClassifier;
+    this.message = message;
   }
-  public processMessage(message: string): string {
-    // Get the intent from the classifier
+
+  public processMessage(message: string, from: string): string {
     const intent = this.intentClassifier.getIntent(message);
-    console.log("intent",intent);
-    // Perform actions based on the detected intent
     if (intent === 'greeting') {
-      return 'Hello! How can I assist you?';
-    } else if(  intent=='farewell') {
+      this.message.sendWelcomeMessage(from);
+    } else if (intent === 'farewell') {
       return 'ok bye';
-    } 
+    }
   }
 }
-export default ChatbotService;
 
+export default ChatbotService;
