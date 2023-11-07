@@ -26,8 +26,24 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+# Prerequisites
+Before you begin, ensure you have met the following requirements:
 
+* Node.js and npm installed
+* Nest.js CLI installed (npm install -g @nestjs/cli)
+* MySQL database accessible
+
+## Getting Started
+### Installation
+* Clone this repository:
+```
+https://github.com/madgicaltechdom/chatbot-nestjs-boilerplate.git
+```
+* Navigate to the Project Directory:
+```
+cd chatbot-nestjs-boilerplate
+```
+* Install Project Dependencies:
 ```bash
 $ npm install
 ```
@@ -57,49 +73,65 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+
+# Add the following environment variables:
+
+```bash
+API_URL = API_URL
+BOT_ID = BOT_ID
+API_KEY = API_KEY
+DATA_BASE=DATA_BASE
+DB_HOST=DB_HOST
+DB_USER=DB_USER
+DB_PASSWORD=DB_PASSWORD
+```
+# API Endpoints
+```
+POST api/message: Endpoint for handling user requests. 
+Get/api/status: Endpoint for checking the status of  api
+```
 # folder structure
 
 ```bash
 src/
-├── app.controller.ts             
-├── app.module.ts                 
-├── main.ts                       
-├── chat/                        
-│   ├── chat.service.ts          
-│   └── chatbot.model.ts          
-├── common/                       
-│   ├── exceptions/                       
-│   │   ├── custom.exception.ts        
-│   │   └── http-exception.filter.ts 
-│   ├── middleware/              
-│   │   ├── log.helper.ts        
-│   │   └── log.middleware.ts     
-│   └── utils/                    
-│       └── date.service.ts       
-├── config/                       
-│   └── database.config.ts        
-├── i18n/                         
-│   ├── en/                       
-│   │   └── localised-strings.ts                  
-│   └── hi/                       
-│       └── localised-strings.ts                 
-├── localization/                 
-│   ├── localization.service.ts   
-│   └── localization.module.ts                
-│                          
-├── message/                      
-│   ├── message.service.ts 
-│   └── message.service.ts           
-└── model/                       
-│   ├── user.entity.ts   
+├── app.controller.ts
+├── app.module.ts
+├── main.ts
+├── chat/
+│   ├── chat.service.ts
+│   └── chatbot.model.ts
+├── common/
+│   ├── exceptions/
+│   │   ├── custom.exception.ts
+│   │   └── http-exception.filter.ts
+│   ├── middleware/
+│   │   ├── log.helper.ts
+│   │   └── log.middleware.ts
+│   └── utils/
+│       └── date.service.ts
+├── config/
+│   └── database.config.ts
+├── i18n/
+│   ├── en/
+│   │   └── localised-strings.ts
+│   └── hi/
+│       └── localised-strings.ts
+├── localization/
+│   ├── localization.service.ts
+│   └── localization.module.ts
+│
+├── message/
+│   ├── message.service.ts
+│   └── message.service.ts
+└── model/
+│   ├── user.entity.ts
 │   ├──user.module.ts
 │   └──query.ts
-└── swiftchat/                    
-    ├── swiftchat.module.ts             
-    └── swiftchat.service.ts      
+└── swiftchat/
+    ├── swiftchat.module.ts
+    └── swiftchat.service.ts
 
-``````
-
+```
 
 ## Support
 
@@ -108,4 +140,5 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](LICENSE).
+
 # chatbot-nestjs-boilerplate
