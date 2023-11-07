@@ -7,7 +7,7 @@ import { Response } from 'express';
 export class AppController {
   UserService: any;
   constructor(private readonly chatbotService: ChatbotService) {}
-  
+
   @Get('/api/status')
   getStatus(@Res() res: Response) {
     res.status(200).send({
@@ -21,7 +21,7 @@ export class AppController {
     try {
       const { from, text, type } = body;
       let id = this.chatbotService.processMessage(text.body, body.from);
-      log(body.from, body.text);
+      log(body.from,text.body);
       res.send({
         status: 200,
         message: 'Success',
