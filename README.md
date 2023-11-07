@@ -57,6 +57,49 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+# folder structure
+
+```bash
+src/
+├── app.controller.ts             
+├── app.module.ts                 
+├── main.ts                       
+├── chat/                        
+│   ├── chat.service.ts          
+│   └── chatbot.model.ts          
+├── common/                       
+│   ├── exceptions/                       
+│   │   ├── custom.exception.ts        
+│   │   └── http-exception.filter.ts 
+│   ├── middleware/              
+│   │   ├── log.helper.ts        
+│   │   └── log.middleware.ts     
+│   └── utils/                    
+│       └── date.service.ts       
+├── config/                       
+│   └── database.config.ts        
+├── i18n/                         
+│   ├── en/                       
+│   │   └── localised-strings.ts                  
+│   └── hi/                       
+│       └── localised-strings.ts                 
+├── localization/                 
+│   ├── localization.service.ts   
+│   └── localization.module.ts                
+│                          
+├── message/                      
+│   ├── message.service.ts 
+│   └── message.service.ts           
+└── model/                       
+│   ├── user.entity.ts   
+│   ├──user.module.ts
+│   └──query.ts
+└── swiftchat/                    
+    ├── swiftchat.module.ts             
+    └── swiftchat.service.ts      
+
+``````
+
 
 ## Support
 
