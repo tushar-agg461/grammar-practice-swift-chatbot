@@ -2,7 +2,7 @@ import { localisedStrings } from './i18n/en/message';
 import { MessageService } from './chat/message.service';
 import IntentClassifier from './intent/intent-classifier.service';
 import ChatbotService from './intent/Chatbot service';
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { LoggingService } from './common/middleware/logger.middleware';
 import { log } from './common/middleware/logger.help';
 
@@ -20,19 +20,23 @@ export class AppController {
   @Get(`/api/status`)
   async getStauas() {
     return {
-      staus: 'ok',
+      staus: 200,
+      message:"ok"
     };
   }
 
   @Post('/message')
-
-  async handelUserMessage(@Body() body): Promise<void> {
+  async handelUserMessage(@Body() body, @Res() res): Promise<void> {
     try {
       const { from, text, type } = body;
       let id = this.chatbotService.processMessage(text.body,body.from);
       log(body.from,body.text,)
+      res.send({
+        status: 200,
+        message:"Success"
+      })
     } catch (error) {
-      console.error(error);
+      res.send(error)
     }
   }
 }

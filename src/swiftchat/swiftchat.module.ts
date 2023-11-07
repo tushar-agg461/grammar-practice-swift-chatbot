@@ -1,10 +1,12 @@
 // swiftchat.module.ts
 
 import { Module } from '@nestjs/common';
-import { SwiftchatService } from './swiftchat.service'; // Update the path to swiftchat.service
+import { SwiftchatService } from './swiftchat.service';
+import { MessageModule } from 'src/chat/message.module'; // Correct the import path as necessary
 
 @Module({
+  imports: [MessageModule], // Import MessageModule
   providers: [SwiftchatService],
-  exports: [SwiftchatService], // Export the SwiftchatService to make it available for other modules
+  exports: [SwiftchatService],
 })
 export class SwiftchatModule {}

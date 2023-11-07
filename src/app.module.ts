@@ -9,11 +9,11 @@ import * as dotenv from 'dotenv';
 import { databaseConfig } from './config/database-config.service';
 import { APP_FILTER } from '@nestjs/core';
 import { LoggingService } from './common/middleware/logger.middleware';
-import { MessageModule } from './chat/message.module';
 import { LocalizationModule } from './localization/localization.module';
 import { SwiftchatModule } from './swiftchat/swiftchat.module';
 import { HttpExceptionFilter } from './common/exception/http-exception.filter';
-import { ChatbotModule } from './intent/intent.module';
+import { ChatbotModule } from './intent/chat.module';
+import { MessageModule } from './chat/message.module';
 
 dotenv.config();
 
@@ -26,9 +26,8 @@ dotenv.config();
     }),
     TypeOrmModule.forFeature([User]),
     MessageModule,
-    LocalizationModule,
+    ChatbotModule,
     SwiftchatModule,
-    ChatbotModule, // Include the ChatbotModule
   ],
   controllers: [AppController],
   providers: [
