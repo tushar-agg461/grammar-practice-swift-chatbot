@@ -1,3 +1,4 @@
 export const localisedStrings = {
-    welcomeMessage:"Hi how can i assist you?",
+    welcomeMessage:"Hi Welcome to the ChatBot",
+    seeMoreMessage : "See More Data"
 }

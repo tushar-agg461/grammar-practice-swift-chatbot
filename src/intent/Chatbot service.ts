@@ -1,14 +1,14 @@
+import { SwiftchatService } from 'src/swiftchat/swiftchat.service';
 import IntentClassifier from './intent-classifier.service';
-import { MessageService } from 'src/chat/message.service';
 
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class ChatbotService {
   private readonly intentClassifier: IntentClassifier;
-  private readonly message: MessageService;
+  private readonly message: SwiftchatService;
 
-  constructor(intentClassifier: IntentClassifier, message: MessageService) {
+  constructor(intentClassifier: IntentClassifier, message: SwiftchatService) {
     this.intentClassifier = intentClassifier;
     this.message = message;
   }
