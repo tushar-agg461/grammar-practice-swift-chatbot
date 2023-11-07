@@ -7,7 +7,7 @@ import { Response } from 'express';
 export class AppController {
   UserService: any;
   constructor(private readonly chatbotService: ChatbotService) {}
-
+  
   @Get('/api/status')
   getStatus(@Res() res: Response) {
     res.status(200).send({
