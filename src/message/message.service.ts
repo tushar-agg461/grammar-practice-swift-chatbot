@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { localisedStrings } from 'src/i18n/en/message';
+import { localisedStrings } from 'src/i18n/en/localised-strings';
 import axios from 'axios';
 import { CustomException } from 'src/common/exception/custom.exception';
 

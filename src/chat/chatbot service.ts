@@ -1,7 +1,7 @@
 import { SwiftchatService } from 'src/swiftchat/swiftchat.service';
-import IntentClassifier from './intent-classifier.service';
 
 import { Injectable } from '@nestjs/common';
+import IntentClassifier from '../intent/intent.classifier';
 
 @Injectable()
 export class ChatbotService {
@@ -17,9 +17,10 @@ export class ChatbotService {
     const intent = this.intentClassifier.getIntent(message);
     if (intent === 'greeting') {
       this.message.sendWelcomeMessage(from);
-    } else if (intent === 'farewell') {
-      return 'ok bye';
+    } else if (intent === 'button') {
+      this.message.sendButtonMessage(from);
     }
+    return "ok"
   }
 }
 

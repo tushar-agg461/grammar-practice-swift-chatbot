@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { MessageService } from 'src/chat/message.service';
-import { localisedStrings as english} from 'src/i18n/en/message';
-import { localisedStrings as hindi} from 'src/i18n/hn/message';
+import { localisedStrings as english} from 'src/i18n/en/localised-strings';
+import { localisedStrings as hindi} from 'src/i18n/hn/localised-strings';
+import { MessageService } from 'src/message/message.service';
 
 @Injectable()
 export class LocalizationService {

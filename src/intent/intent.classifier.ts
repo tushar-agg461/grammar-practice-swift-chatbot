@@ -8,7 +8,8 @@ class IntentClassifier {
   }
   private trainClassifier() {
     this.classifier.addDocument('Hi', 'greeting');
-    this.classifier.addDocument('bye', 'farewell');
+    this.classifier.addDocument('sendbutton', 'button');
+    
     this.classifier.train();
   }
   public getIntent(message: string): string {

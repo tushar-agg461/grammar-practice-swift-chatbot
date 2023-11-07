@@ -12,8 +12,8 @@ import { LoggingService } from './common/middleware/logger.middleware';
 import { LocalizationModule } from './localization/localization.module';
 import { SwiftchatModule } from './swiftchat/swiftchat.module';
 import { HttpExceptionFilter } from './common/exception/http-exception.filter';
-import { ChatbotModule } from './intent/chat.module';
-import { MessageModule } from './chat/message.module';
+import { ChatbotModule } from './chat/chatbot.module';
+import { MessageModule } from './message/message.module';
 
 dotenv.config();
 

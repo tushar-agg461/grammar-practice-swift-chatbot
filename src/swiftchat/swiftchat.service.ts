@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
-import { MessageService } from 'src/chat/message.service';
+import { MessageService } from 'src/message/message.service';
 
 dotenv.config();
 
@@ -46,8 +46,11 @@ export class SwiftchatService {
             },
           },
           buttons: [
-            
-            // Your button data here
+            {
+              "type": "solid",
+              "body": "Mathematics, Class 1",
+              "reply": "Mathematics, Class 1"
+          }
           ],
           allow_custom_response: false,
         },
