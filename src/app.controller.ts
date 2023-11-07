@@ -15,6 +15,7 @@ export class AppController {
       message: 'ok',
     });
   }
+
   @Post('/message')
   async handelUserMessage(@Body() body, @Res() res): Promise<void> {
     try {
@@ -26,7 +27,7 @@ export class AppController {
         message: 'Success',
       });
     } catch (error) {
-      res.send(error);
+      res.status(500).send({ error: error.message });
     }
   }
 }
