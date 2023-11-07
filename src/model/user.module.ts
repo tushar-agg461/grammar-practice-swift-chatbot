@@ -10,4 +10,5 @@ import { UserService } from './query';
   providers: [UserService],
   exports: [UserService], // Export the UserService to make it available for other modules
 })
+
 export class UserModule {}
