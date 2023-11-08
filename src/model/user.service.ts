@@ -15,7 +15,6 @@ export class UserService {
     language: string,
     botID: string,
   ): Promise<User> {
-    
     const user = new User();
     user.mobileNumber = mobileNumber;
     user.language = language;
@@ -26,5 +25,9 @@ export class UserService {
     mobileNumber: string,
   ): Promise<User | undefined> {
     return this.userRepository.findOne({ where: { mobileNumber } });
+  }
+
+  async saveUser(user: User): Promise<User | undefined> {
+    return this.userRepository.save(user);
   }
 }

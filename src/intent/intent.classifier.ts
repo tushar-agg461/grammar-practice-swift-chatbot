@@ -1,4 +1,5 @@
 import * as natural from 'natural';
+import { localisedStrings } from 'src/i18n/en/localised-strings';
 
 class IntentClassifier {
   private classifier: natural.BayesClassifier;
@@ -8,13 +9,25 @@ class IntentClassifier {
   }
   private trainClassifier() {
     this.classifier.addDocument('Hi', 'greeting');
-    this.classifier.addDocument('sendbutton', 'button');
-    
     this.classifier.train();
   }
-  public getIntent(message: string): string {
+
+  private getEntities(intent: string, message: string): string[] {
+    if (intent === 'select_language') {
+      if (localisedStrings.language_hindi.indexOf(message)) {
+        return ['hindi'];
+      } else {
+        return ['english'];
+      }
+    }
+  }
+  public getIntent(message: string): { intent: string; entities: string[] } {
     const intent = this.classifier.classify(message);
-    return intent;
+    const entities = this.getEntities(intent, message);
+    return {
+      intent: intent,
+      entities: entities,
+    };
   }
 }
 export default IntentClassifier;

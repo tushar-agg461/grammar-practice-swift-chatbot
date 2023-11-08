@@ -1,4 +1,4 @@
-import ChatbotService from './chat/chatbot service';
+import ChatbotService from './chat/chatbot.service';
 import { Body, Controller, Get, Post, Res } from '@nestjs/common';
 import { log } from './common/middleware/logger.help';
 import { Response } from 'express';
@@ -11,23 +11,32 @@ export class AppController {
   @Get('/api/status')
   getStatus(@Res() res: Response) {
     res.status(200).send({
-      status: 200,
-      message: 'ok',
+      status: {
+        code: 0,
+        message: 'OK',
+      },
     });
   }
 
   @Post('/message')
   async handelUserMessage(@Body() body, @Res() res): Promise<void> {
     try {
-      const { from, text, type } = body;
-      let id = this.chatbotService.processMessage(text.body, body.from);
-      log(body.from,text.body);
-      res.send({
-        status: 200,
-        message: 'Success',
+      const { from, text } = body;
+      this.chatbotService.processMessage(from, text);
+      log(body.from, text.body);
+      res.status(200).send({
+        status: {
+          code: 0,
+          message: 'Success',
+        },
       });
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).send({
+        status: {
+          code: 1,
+          message: error.message,
+        },
+      });
     }
   }
 }

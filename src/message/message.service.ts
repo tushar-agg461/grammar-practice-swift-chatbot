@@ -1,19 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { localisedStrings } from 'src/i18n/en/localised-strings';
 import axios from 'axios';
 import { CustomException } from 'src/common/exception/custom.exception';
+import { localisedStrings } from 'src/i18n/en/localised-strings';
 
 @Injectable()
-export class MessageService {
-
+export abstract class MessageService {
   async prepareWelcomeMessage() {
-    let welcomeMessage = localisedStrings.welcomeMessage
-    return welcomeMessage;
+    return localisedStrings.welcomeMessage;
   }
 
   getSeeMoreButtonLabel() {
-    let seeMoreMessage = localisedStrings.seeMoreMessage
-    return seeMoreMessage;
+    return localisedStrings.seeMoreMessage;
   }
 
   async sendMessage(baseUrl: string, requestData: any, token: string) {
@@ -29,4 +26,7 @@ export class MessageService {
       throw new CustomException(error);
     }
   }
+
+  abstract sendWelcomeMessage(from: string, language: string);
+  abstract sendLanguageChangedMessage(from: string, language: string);
 }

@@ -1,65 +1,53 @@
 import { Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
+import { LocalizationService } from 'src/localization/localization.service';
 import { MessageService } from 'src/message/message.service';
 
 dotenv.config();
 
 @Injectable()
-export class SwiftchatService {
-
+export class SwiftchatMessageService extends MessageService {
   private botId = process.env.BOT_ID;
   private apiKey = process.env.API_KEY;
   private apiUrl = process.env.API_URL;
   private baseUrl = `${this.apiUrl}/${this.botId}/messages`;
 
-  constructor(private readonly messageService: MessageService) {}
+  private prepareRequestData(from: string, requestBody: string): any {
+    return {
+      to: from,
+      type: 'text',
+      text: {
+        body: requestBody,
+      },
+    };
+  }
+  async sendWelcomeMessage(from: string, language: string) {
+    const localisedStrings = LocalizationService.getLocalisedString(language);
+    const requestData = this.prepareRequestData(
+      from,
+      localisedStrings.welcomeMessage,
+    );
 
-  async sendWelcomeMessage(from: string) {
-    try {
-      const welcomeMessage = await this.messageService.prepareWelcomeMessage();
-      const requestData = {
-        to: from,
-        type: 'text',
-        text: {
-          body: welcomeMessage,
-        },
-      };
-
-      const response = await this.messageService.sendMessage(this.baseUrl, requestData, this.apiKey);
-      return response;
-    } catch (error) {
-      // Handle errors
-    }
+    const response = await this.sendMessage(
+      this.baseUrl,
+      requestData,
+      this.apiKey,
+    );
+    return response;
   }
 
-  async sendButtonMessage(recipientMobile: string) {
-    try {
-      const buttonLabel = this.messageService.getSeeMoreButtonLabel();
-      const requestData = {
-        to: recipientMobile,
-        type: 'button',
-        button: {
-          body: {
-            type: 'text',
-            text: {
-              body: buttonLabel,
-            },
-          },
-          buttons: [
-            {
-              "type": "solid",
-              "body": "Mathematics, Class 1",
-              "reply": "Mathematics, Class 1"
-          }
-          ],
-          allow_custom_response: false,
-        },
-      };
+  async sendLanguageChangedMessage(from: string, language: string) {
+    const localisedStrings = LocalizationService.getLocalisedString(language);
+    const requestData = this.prepareRequestData(
+      from,
+      localisedStrings.select_language,
+    );
 
-      const response = await this.messageService.sendMessage(this.baseUrl, requestData, this.apiKey);
-      return response;
-    } catch (error) {
-      // Handle errors
-    }
+    const response = await this.sendMessage(
+      this.baseUrl,
+      requestData,
+      this.apiKey,
+    );
+    return response;
   }
 }
