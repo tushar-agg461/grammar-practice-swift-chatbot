@@ -24,7 +24,8 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+In this comprehensive guide, we introduce you to our Chatbot Starter Kit, a resource designed to empower developers in building robust chatbot applications. Whether you are just starting your journey in chatbot development or are an experienced developer seeking an efficient solution, this document is your go-to resource for mastering the use of our starter kit.
+
 
 # Prerequisites
 Before you begin, ensure you have met the following requirements:
@@ -35,6 +36,10 @@ Before you begin, ensure you have met the following requirements:
 
 ## Getting Started
 ### Installation
+* Fork the repository
+Click the "Fork" button in the upper right corner of the repository page. This will create a copy of the repository under your GitHub account.
+
+
 * Clone this repository:
 ```
 https://github.com/madgicaltechdom/chatbot-nestjs-boilerplate.git
@@ -133,12 +138,4 @@ src/
 
 ```
 
-## Support
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## License
-
-Nest is [MIT licensed](LICENSE).
-
-# chatbot-nestjs-boilerplate
