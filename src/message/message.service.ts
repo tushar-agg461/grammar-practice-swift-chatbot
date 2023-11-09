@@ -8,7 +8,6 @@ export abstract class MessageService {
   async prepareWelcomeMessage() {
     return localisedStrings.welcomeMessage;
   }
-
   getSeeMoreButtonLabel() {
     return localisedStrings.seeMoreMessage;
   }

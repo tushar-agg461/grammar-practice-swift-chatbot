@@ -9,11 +9,12 @@ class IntentClassifier {
   }
   private trainClassifier() {
     this.classifier.addDocument('Hi', 'greeting');
+    
     this.classifier.train();
   }
 
   private getEntities(intent: string, message: string): string[] {
-    if (intent === 'select_language') {
+    if (intent === 'greeting') {
       if (localisedStrings.language_hindi.indexOf(message)) {
         return ['hindi'];
       } else {

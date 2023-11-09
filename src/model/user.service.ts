@@ -5,6 +5,7 @@ import { User } from './user.entity';
 
 @Injectable()
 export class UserService {
+  
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
@@ -19,6 +20,7 @@ export class UserService {
     user.mobileNumber = mobileNumber;
     user.language = language;
     user.botID = botID;
+    console.log(user);
     return this.userRepository.save(user);
   }
   async findUserByMobileNumber(
