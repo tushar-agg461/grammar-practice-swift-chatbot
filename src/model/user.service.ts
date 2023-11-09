@@ -16,13 +16,19 @@ export class UserService {
     language: string,
     botID: string,
   ): Promise<User> {
-    const user = new User();
-    user.mobileNumber = mobileNumber;
-    user.language = language;
-    user.botID = botID;
-    console.log(user);
-    return this.userRepository.save(user);
+    const existingUser = await this.findUserByMobileNumber(mobileNumber);
+    if (existingUser) {
+      existingUser.language = language;
+      return this.userRepository.save(existingUser);
+    } else {
+      const newUser = new User();
+      newUser.mobileNumber = mobileNumber;
+      newUser.language = language;
+      newUser.botID = botID;
+      return this.userRepository.save(newUser);
+    }
   }
+
   async findUserByMobileNumber(
     mobileNumber: string,
   ): Promise<User | undefined> {

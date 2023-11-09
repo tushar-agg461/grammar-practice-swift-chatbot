@@ -19,9 +19,14 @@ export class ChatbotService {
     this.userService = userService;
   }
 
-  public async processMessage(from: string, message: string): Promise<any> {
+  public async processMessage(body:any): Promise<any> {
+    const { from, text } = body;
+    let botID = process.env.BOT_ID;
     const userData = await this.userService.findUserByMobileNumber(from);
-    const { intent, entities } = this.intentClassifier.getIntent(message);
+    const { intent, entities } = this.intentClassifier.getIntent(text.body);
+    if (userData.language === 'english' || userData.language === 'hindi') {
+      await this.userService.saveUser(userData);
+    }      
     if (intent === 'greeting') {
       this.message.sendWelcomeMessage(from, userData.language);
     } else if (intent === 'select_language') {

@@ -25,16 +25,9 @@ export class AppController {
 
   @Post('/message')
   async handelUserMessage(@Body() body, @Res() res): Promise<void> {
-    console.log(body);
     try {
       const { from, text } = body;
-      let botID = process.env.BOT_ID;
-      let language = await this.langugae.createUser(
-        body.from,
-        'english',
-        botID,
-      );
-      this.chatbotService.processMessage(from, text.body);
+      this.chatbotService.processMessage(body);
       log(body.from, text.body);
       res.status(200).send({
         status: {
