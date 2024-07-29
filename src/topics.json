@@ -1,0 +1,48 @@
+[
+  {
+    "topic": "Passive Voice",
+    "level": "easy",
+    "questions": [
+      {
+        "question": "Rewrite the sentence in passive voice: 'The cat ate the mouse.'",
+        "options": [
+          "The mouse was eaten by the cat.",
+          "The mouse ate the cat.",
+          "The cat is eating the mouse.",
+          "The mouse eats the cat."
+        ],
+        "correctAnswer": "The mouse was eaten by the cat.",
+        "explanation": "In passive voice, the object of the action becomes the subject of the sentence."
+      },
+      {
+        "question": "Rewrite the sentence in passive voice: 'The chef cooked a delicious meal.'",
+        "options": [
+          "A delicious meal was cooked by the chef.",
+          "The chef is cooking a delicious meal.",
+          "A delicious meal cooks the chef.",
+          "The chef cooks a delicious meal."
+        ],
+        "correctAnswer": "A delicious meal was cooked by the chef.",
+        "explanation": "In passive voice, the focus is on the meal rather than the chef."
+      }
+    ]
+  },
+  {
+    "topic": "Present Perfect Tense",
+    "level": "medium",
+    "questions": [
+      {
+        "question": "Choose the correct form of the verb: 'She _____ (write) a letter.'",
+        "options": ["writes", "has written", "wrote", "writing"],
+        "correctAnswer": "has written",
+        "explanation": "The present perfect tense is used to describe an action that occurred at an unspecified time and has relevance to the present."
+      },
+      {
+        "question": "Complete the sentence: 'They _____ (finish) their homework before dinner.'",
+        "options": ["finished", "finishes", "have finished", "finishing"],
+        "correctAnswer": "have finished",
+        "explanation": "Present perfect tense is used to indicate that an action has been completed before another point in time."
+      }
+    ]
+  }
+]

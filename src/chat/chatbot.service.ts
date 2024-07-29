@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import IntentClassifier from '../intent/intent.classifier';
 import { MessageService } from 'src/message/message.service';
 import { UserService } from 'src/model/user.service';
-
+import { User } from 'src/model/user.entity';
 @Injectable()
 export class ChatbotService {
   private readonly intentClassifier: IntentClassifier;
@@ -20,22 +20,89 @@ export class ChatbotService {
   }
 
   public async processMessage(body: any): Promise<any> {
-    const { from, text } = body;
+    const { from, button_response, text } = body;
+    console.log('button response:', button_response);
     let botID = process.env.BOT_ID;
     const userData = await this.userService.findUserByMobileNumber(from);
-    const { intent, entities } = this.intentClassifier.getIntent(text.body);
+    // const { intent, entities } = this.intentClassifier.getIntent(text.body);
     if (userData.language === 'english' || userData.language === 'hindi') {
       await this.userService.saveUser(userData);
     }
-    if (intent === 'greeting') {
-      this.message.sendWelcomeMessage(from, userData.language);
-    } else if (intent === 'select_language') {
-      const selectedLanguage = entities[0];
-      const userData = await this.userService.findUserByMobileNumber(from);
-      userData.language = selectedLanguage;
-      await this.userService.saveUser(userData);
-      this.message.sendLanguageChangedMessage(from, userData.language);
+
+    if (button_response) {
+      // console.log('hello');
+      if (button_response.body === 'Passive Voice') {
+        console.log('next');
+        await this.message.sendDifficultyButtons(from);
+      } else if (['easy', 'medium', 'hard'].includes(button_response.body)) {
+        await this.message.startQuiz(
+          from,
+          'Passive Voice',
+          button_response.body,
+        );
+      }
+      return 'ok';
     }
+
+    // if (button_response) {
+    //   const { reply } = button_response;
+
+    //   if (userData.topic && userData.difficulty) {
+    //     await this.message.handleAnswer(from, reply);
+    //   } else if (!userData.topic) {
+    //     console.log('hello');
+    //     await this.message.startQuiz(from, reply, userData.difficulty);
+    //   } else if (!userData.difficulty) {
+    //     console.log('sfv');
+    //     await this.message.startQuiz(from, userData.topic, reply);
+    //   }
+    // }
+
+    // else {
+    //   const { intent, entities } = this.intentClassifier.getIntent(text?.body);
+
+    //   if (intent === 'start_quiz') {
+    //     await this.message.sendTopicsList(from);
+    //   } else if (intent === 'change_language') {
+    //     const selectedLanguage = entities[0];
+    //     userData.language = selectedLanguage;
+    //     await this.userService.saveUser(userData);
+    //     await this.message.sendLanguageChangedMessage(from, userData.language);
+    //   } else {
+    //     await this.message.sendWelcomeMessage(from, userData.language);
+    //   }
+    // }
+    if (text && text.body) {
+      const { intent, entities } = this.intentClassifier.getIntent(text.body);
+
+      if (intent === 'select_language') {
+        const selectedLanguage = entities[0];
+        userData.language = selectedLanguage;
+        await this.userService.saveUser(userData);
+        await this.message.sendLanguageChangedMessage(from, userData.language);
+      } else {
+        await this.message.sendWelcomeMessage(from, userData.language);
+      }
+    } else if (body.text && body.text.body === 'greeting') {
+      console.log('hi');
+      await this.message.sendWelcomeMessage(from, userData.language);
+    } else {
+      await this.message.sendWelcomeMessage(from, userData.language);
+    }
+
+    // if (body.text.body === 'greeting') {
+    //   this.message.sendWelcomeMessage(from, userData.language);
+    // } else if (button_response && body.text) {
+    //   this.message.sendLanguageChangedMessage(from, button_response.body);
+    // } else if (intent === 'select_language') {
+    //   const selectedLanguage = entities[0];
+    //   const userData = await this.userService.findUserByMobileNumber(from);
+    //   userData.language = selectedLanguage;
+    //   await this.userService.saveUser(userData);
+    //   this.message.sendLanguageChangedMessage(from, userData.language);
+    // } else {
+    //   this.message.sendWelcomeMessage(from, userData.language);
+    // }
     return 'ok';
   }
 }
