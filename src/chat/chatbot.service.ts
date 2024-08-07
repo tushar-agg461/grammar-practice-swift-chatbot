@@ -23,33 +23,76 @@ export class ChatbotService {
     const { from, button_response, text } = body;
     console.log('button response:', button_response);
     let botID = process.env.BOT_ID;
-    const userData = await this.userService.findUserByMobileNumber(from);
+
+    let userData = await this.userService.findUserByMobileNumber(from, botID);
+    if (!userData) {
+      console.log('User not found');
+      userData = await this.userService.createUser(
+        from,
+        'english',
+        process.env.BOT_ID,
+      );
+      console.log('NEW user created');
+    }
     // const { intent, entities } = this.intentClassifier.getIntent(text.body);
     if (userData.language === 'english' || userData.language === 'hindi') {
       await this.userService.saveUser(userData);
     }
 
     if (button_response) {
-      // console.log('hello');
-      if (button_response.body === 'Passive Voice') {
-        console.log('next');
+      if (button_response.body === 'Next') {
+        await this.message.sendNextQues(from);
+      } else if (button_response.body === 'Back to Main Menu') {
+        await this.userService.resetUserProgress(from);
+        await this.message.sendTopicsList(from);
+      } else if (userData.topic && userData.difficulty) {
+        // User has selected both topic and difficulty, handle the answer
+        // await this.userService.resetUserProgress(from);
+        console.log(userData.topic, userData.difficulty);
+        await this.message.handleAnswer(from, button_response.body);
+        // await this.message.sendNextAndMainMenuButtons(from);
+        await this.message.sendNextQues(from);
+      } else if (userData.topic) {
+        // User has selected topic but not difficulty
+        console.log('Difficulty selected:', button_response.body);
+        userData.difficulty = button_response.body;
+        await this.userService.saveUser(userData);
+        await this.message.startQuiz(from, userData.topic, userData.difficulty);
+      } else if (!userData.topic && !userData.difficulty) {
+        // User has not selected topic
+        console.log('Topic selected:', button_response.body);
+        userData.topic = button_response.body;
+        await this.userService.saveUser(userData);
         await this.message.sendDifficultyButtons(from);
-      } else if (['easy', 'medium', 'hard'].includes(button_response.body)) {
-        await this.message.startQuiz(
-          from,
-          'Passive Voice',
-          button_response.body,
-        );
+      } else {
+        await this.userService.resetUserProgress(from);
+        await this.message.sendWelcomeMessage(from, userData.language);
       }
       return 'ok';
     }
+    // if (button_response) {
+    //   // console.log('hello');
+    //   if (button_response.body === 'Passive Voice') {
+    //     console.log(userData.topic, userData.difficulty);
+    //     await this.message.sendDifficultyButtons(from);
+    //   } else if (['easy', 'medium', 'hard'].includes(button_response.body)) {
+    //     console.log(userData.topic, userData.difficulty);
+    //     await this.message.startQuiz(
+    //       from,
+    //       'Passive Voice',
+    //       button_response.body,
+    //     );
+    //   }
+    //   return 'ok';
+    // }
 
     // if (button_response) {
     //   const { reply } = button_response;
 
     //   if (userData.topic && userData.difficulty) {
+    //     console.log(userData.topic, userData.difficulty);
     //     await this.message.handleAnswer(from, reply);
-    //   } else if (!userData.topic) {
+    //   } else if (userData.topic) {
     //     console.log('hello');
     //     await this.message.startQuiz(from, reply, userData.difficulty);
     //   } else if (!userData.difficulty) {

@@ -22,4 +22,10 @@ export class User {
 
   @Column({ default: 0 })
   currentquesindex: number;
+
+  @Column({ default: 0 })
+  setNumber: number;
+
+  @Column({ default: 0 })
+  score: number;
 }

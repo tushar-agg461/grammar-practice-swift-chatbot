@@ -32,6 +32,7 @@ export abstract class MessageService {
   abstract sendDifficultyButtons(from: string);
   abstract sendTopicsList(from: string);
   abstract startQuiz(from: string, topic: string, difficulty: string);
-  // abstract handleAnswer(from: string, answer: string);
-  // abstract sendNextQues(form: string);
+  abstract handleAnswer(from: string, answer: string);
+  abstract sendNextQues(form: string);
+  abstract sendNextAndMainMenuButtons(from: string);
 }

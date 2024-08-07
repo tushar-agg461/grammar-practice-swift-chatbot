@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import topicsJson from '../topics.json';
+import topicsJson from '../topic.json';
 import * as dotenv from 'dotenv';
 import { LocalizationService } from 'src/localization/localization.service';
 import { MessageService } from 'src/message/message.service';
 import { response } from 'express';
 import axios from 'axios';
 import { UserService } from 'src/model/user.service';
-
+import _ from 'lodash';
 dotenv.config();
 
 @Injectable()
@@ -21,9 +21,14 @@ export class SwiftchatMessageService extends MessageService {
     super();
     this.topics = this.getTopic();
   }
+  // private getTopic(): string[] {
+  //   return topicsJson.map((topic) => topic.topic);
+  // }
   private getTopic(): string[] {
-    return topicsJson.map((topic) => topic.topic);
+    const uniqueTopics = new Set(topicsJson.map((topic) => topic.topic));
+    return Array.from(uniqueTopics);
   }
+
   // function to create level buttons
   private async createLevelButtons(
     from: string,
@@ -94,7 +99,8 @@ export class SwiftchatMessageService extends MessageService {
   // function to create ques and options buttons
   async sendQuestionWithButtons(from: string, question: any) {
     const url = `${this.apiUrl}/${this.botId}/messages`;
-    const buttons = question.options.map((option: string) => ({
+    const shuffledoptions = _.shuffle(question.options);
+    const buttons = shuffledoptions.map((option: string) => ({
       type: 'solid',
       body: option,
       reply: option,
@@ -129,6 +135,40 @@ export class SwiftchatMessageService extends MessageService {
     }
   }
 
+  // function to send next and main menu buttons
+  async sendNextAndMainMenuButtons(from: string): Promise<void> {
+    const buttons = [
+      { body: 'Next', reply: 'Next' },
+      { body: 'Back to Main Menu', reply: 'Back to Main Menu' },
+    ];
+
+    const messageData = {
+      to: from,
+      type: 'button',
+      button: {
+        body: {
+          type: 'text',
+          text: {
+            body: 'Please choose an option:',
+          },
+        },
+        buttons: buttons,
+        allow_custom_response: false,
+      },
+    };
+
+    try {
+      await axios.post(this.baseUrl, messageData, {
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+      });
+    } catch (error) {
+      console.error('Error sending Next and Back to Main Menu buttons:', error);
+    }
+  }
+
   private prepareRequestData(from: string, requestBody: string): any {
     return {
       to: from,
@@ -145,11 +185,15 @@ export class SwiftchatMessageService extends MessageService {
   //     .join('\n')}`;
   // }
 
-  private getQuestion(topic: string, difficulty: string) {
+  private getQuestion(topic: string, difficulty: string, setNumber: number) {
     const topicData = topicsJson.find(
       (t) => t.topic === topic && t.level === difficulty,
     );
-    return topicData ? topicData.questions : [];
+    // if(topicData){
+    //   const setData= topicData.sets.find((set)=>set.setNumber=== setNumber);
+    //   return setData?setData.questions:[];
+    // }
+    return topicData ? topicData.sets[setNumber].questions : [];
   }
 
   private formatQuestionMessage(question: any): string {
@@ -170,7 +214,7 @@ export class SwiftchatMessageService extends MessageService {
       requestData,
       this.apiKey,
     );
-    console.log('kaisa h');
+    // console.log('kaisa h');
     await this.sendTopicsList(from);
     return response;
   }
@@ -206,137 +250,134 @@ export class SwiftchatMessageService extends MessageService {
     await this.createButtons(from, this.topics);
   }
 
-  // async choice(from: string) {
-  //   const requestData = this.prepareRequestData(
-  //     from,
-  //     'Pls select a topic and level of your choice. ',
-  //   );
-
-  //   const response = await this.sendMessage(
-  //     this.baseUrl,
-  //     requestData,
-  //     this.apiKey,
-  //   );
-  //   return response;
-  // }
-
   // function to select the level of question and topic of choice
-  async handleUser(from: string, topic: string, difficulty: string) {
-    const selectedTopic = topicsJson.find(
-      (t) => t.topic === topic && t.level === difficulty,
-    );
-    // console.log(typeof selectedTopic);
-    if (selectedTopic) {
-      for (const question of selectedTopic.questions) {
-        await this.sendQuestionWithButtons(from, question);
-      }
-    } else {
-      const requestData = this.prepareRequestData(
-        from,
-        'Sorry, I couldn’t find the specified topic and difficulty level. Please try again.',
-      );
-
-      const response = await this.sendMessage(
-        this.baseUrl,
-        requestData,
-        this.apiKey,
-      );
-      return response;
-    }
-  }
-
-  // async sendNextQues(from: string) {
-  //   const userProgress = await this.userService.getUserProgress(from);
-  //   const { topic, difficulty, currentquesindex } = userProgress;
-  //   const topicData = topicsJson.find(
+  // async handleUser(from: string, topic: string, difficulty: string) {
+  //   const selectedTopic = topicsJson.find(
   //     (t) => t.topic === topic && t.level === difficulty,
   //   );
-
-  //   if (topicData && currentquesindex < topicData.questions.length) {
-  //     const question = topicData.questions[currentquesindex];
-  //     const formattedQuestion = this.formatQuestionMessage(question);
-  //     const requestData = this.prepareRequestData(from, formattedQuestion);
-  //     await this.sendMessage(this.baseUrl, requestData, this.apiKey);
-  //     await this.userService.updateUserProgress(
-  //       from,
-  //       topic,
-  //       difficulty,
-  //       currentquesindex + 1,
-  //     );
+  //   // console.log(typeof selectedTopic);
+  //   if (selectedTopic) {
+  //     for (const question of selectedTopic.questions) {
+  //       await this.sendQuestionWithButtons(from, question);
+  //     }
   //   } else {
   //     const requestData = this.prepareRequestData(
   //       from,
-  //       'You have completed all questions for this topic and difficulty level.',
+  //       'Sorry, I couldn’t find the specified topic and difficulty level. Please try again.',
   //     );
-  //     await this.sendMessage(this.baseUrl, requestData, this.apiKey);
+
+  //     const response = await this.sendMessage(
+  //       this.baseUrl,
+  //       requestData,
+  //       this.apiKey,
+  //     );
+  //     return response;
   //   }
   // }
 
-  async startQuiz(from: string, topic: string, difficulty: string) {
-    await this.userService.updateUserProgress(topic);
-    // await this.sendNextQues(from);
-  }
-
-  // // function to handle the next question
-  // async sendNextQues(from: string) {
-  //   const userProgress = await this.userService.getUserProgress(from);
-  //   const question = this.getQuestion(
-  //     userProgress.topic,
-  //     userProgress.difficulty,
-  //   );
-
-  //   if (userProgress.currentquesindex < question.length) {
-  //     const ques = question[userProgress.currentquesindex];
-  //     await this.sendQuestionWithButtons(from, ques);
-  //   } else {
-  //     await this.sendMessage(
-  //       this.baseUrl,
-  //       this.prepareRequestData(from, 'You have completed the quiz!'),
-  //       this.apiKey,
-  //     );
-  //     await this.userService.resetUserProgress(from);
-  //   }
-  // }
-
-  // // function to handle the correct answer for selected option
-  // async handleAnswer(from: string, answer: string) {
-  //   const userProgress = await this.userService.getUserProgress(from);
-  //   const questions = this.getQuestion(
-  //     userProgress.topic,
-  //     userProgress.difficulty,
-  //   );
-
-  //   const currentques = questions[userProgress.currentquesindex];
-  //   const correctans = currentques.correctAnswer;
-
-  //   if (answer == correctans) {
-  //     await this.sendMessage(
-  //       this.baseUrl,
-  //       this.prepareRequestData(from, 'Congrats!, Correct answer.'),
-  //       this.apiKey,
-  //     );
-  //   } else {
-  //     await this.sendMessage(
-  //       this.baseUrl,
-  //       this.prepareRequestData(
-  //         from,
-  //         'Sorry!, This is not the correct answer.',
-  //       ),
-  //       this.apiKey,
-  //     );
-  //   }
-  //   userProgress.currentquesindex++;
-  //   await this.userService.saveUSerProgress(userProgress);
-  //   await this.sendNextQues;
-  // }
-
-  // // function to start the quiz
   // async startQuiz(from: string, topic: string, difficulty: string) {
-  //   const user = await this.userService.findUserByMobileNumber(from);
-  //   user.topic = topic;
-  //   user.difficulty = difficulty;
-  //   user.currentquesindex = 0;
-  //   await this.userService.saveUser(user);
+  //   await this.userService.updateUserProgress(topic);
   //   // await this.sendNextQues(from);
   // }
+
+  // function to handle the next question
+  async sendNextQues(from: string) {
+    const userProgress = await this.userService.getUserProgress(from);
+    const question = this.getQuestion(
+      userProgress.topic,
+      userProgress.difficulty,
+      userProgress.setNumber,
+    );
+    // console.log(question.length);
+    console.log(question);
+    if (question.length === 0) {
+      await this.sendMessage(
+        this.baseUrl,
+        this.prepareRequestData(
+          from,
+          'Sorry! We dont have questions for this level.',
+        ),
+        this.apiKey,
+      );
+      await this.userService.resetUserProgress(from);
+      await this.sendTopicsList(from);
+    } else if (userProgress.currentquesindex < question.length) {
+      const ques = question[userProgress.currentquesindex];
+      await this.sendQuestionWithButtons(from, ques);
+    } else {
+      await this.sendMessage(
+        this.baseUrl,
+        this.prepareRequestData(
+          from,
+          `You have completed the quiz!🎉 Your Score is: ${userProgress.score} out of ${question.length}`,
+        ),
+        this.apiKey,
+      );
+      await this.userService.resetUserProgress(from);
+      await this.sendTopicsList(from);
+    }
+  }
+
+  // // function to handle the correct answer for selected option
+  async handleAnswer(from: string, answer: string) {
+    const userProgress = await this.userService.getUserProgress(from);
+    const questions = this.getQuestion(
+      userProgress.topic,
+      userProgress.difficulty,
+      userProgress.setNumber,
+    );
+    console.log(userProgress.currentquesindex);
+    console.log(questions);
+    const currentques = questions[userProgress.currentquesindex];
+    console.log(currentques);
+    const correctans = currentques.correctAnswer;
+
+    if (answer == correctans) {
+      userProgress.score += 1;
+      await this.sendMessage(
+        this.baseUrl,
+        this.prepareRequestData(
+          from,
+          `Congrats!, Correct answer. ✅
+          Correct explanation is : ${currentques.explanation}`,
+        ),
+        this.apiKey,
+      );
+    } else {
+      await this.sendMessage(
+        this.baseUrl,
+        this.prepareRequestData(
+          from,
+          `❌ Sorry!, This is not the correct answer.
+          Correct explanation is : ${currentques.explanation}`,
+        ),
+        this.apiKey,
+      );
+      await this.userService.resetUserProgress(from);
+    }
+    userProgress.currentquesindex++;
+    await this.userService.saveUSerProgress(userProgress);
+    // await this.sendNextQues(from);
+    // await this.sendNextAndMainMenuButtons(from);
+  }
+
+  // function to start the quiz
+  async startQuiz(from: string, topic: string, difficulty: string) {
+    let botId = process.env.botId;
+    const user = await this.userService.findUserByMobileNumber(from, botId);
+
+    const selectedTopic = topicsJson.find(
+      (t) => t.topic === topic && t.level === difficulty,
+    );
+    const setNumber = Math.floor(Math.random() * selectedTopic.sets.length);
+
+    user.topic = topic;
+    user.difficulty = difficulty;
+    user.currentquesindex = 0;
+    user.setNumber = setNumber;
+    user.score = 0;
+    console.log(user.topic, user.difficulty);
+    await this.userService.saveUser(user);
+    await this.sendNextQues(from);
+  }
 }
